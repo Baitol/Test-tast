@@ -1,67 +1,66 @@
+// для роботи з модулями використовував плгагін LiveServer для VS Code 
 import arrayData from './result.js';
 import toChangeData from './data.js';
 let container = document.getElementById('container')
 
-let finalData = [];
-for(let i = 0; i < toChangeData.length; i++){
-    let tempObj = toChangeData[i];
-    if(Object.keys(tempObj).length == 1 && Object.keys(tempObj)[0] == 'group'){
-        let tempGroup = tempObj.group;
-        let finalGroup = [];
-        for(let j = 0; j < tempGroup.length; j++){
-            let tempObj = tempGroup[j];
-            finalGroup.push({})
-            for(let k = 0; k < Object.keys(tempObj).length; k++){
-                let valueObj = {};
-                if(Object.keys(tempObj)[k] == 'price'){
-                    let tempArray = tempObj.price;
-                    if(tempArray.length == 0){
-                        finalGroup[j].price = tempArray;
-                    }else{
-                        tempArray[0].text = tempArray[0].text.replace(/[a-zа-яё$]/gi, '');
-                        finalGroup[j].price = tempArray;
+function changeData(toChangeData){
+    let finalData = [];
+    for(let i = 0; i < toChangeData.length; i++){
+        let tempObj = toChangeData[i];
+        if(Object.keys(tempObj).length == 1 && Object.keys(tempObj)[0] == 'group'){
+            let tempGroup = tempObj.group;
+            let finalGroup = [];
+            for(let j = 0; j < tempGroup.length; j++){
+                let tempObj = tempGroup[j];
+                finalGroup.push({})
+                for(let k = 0; k < Object.keys(tempObj).length; k++){
+                    let valueObj = {};
+                    if(Object.keys(tempObj)[k] == 'price'){
+                        let tempArray = tempObj.price;
+                        if(tempArray.length == 0){
+                         finalGroup[j].price = tempArray;
+                        }else{
+                            tempArray[0].text = tempArray[0].text.replace(/[a-zа-яё$]/gi, '');
+                            finalGroup[j].price = tempArray;
+                        }    
                     }
+                    if(Object.keys(tempObj)[k] == 'productUrl'){
+                        let tempArray = tempObj.productUrl;
+                        tempArray[0].text = 'https://www.metro.ca'+tempArray[0].text
+                        finalGroup[j].productUrl = tempArray;
                     
-                }
-                if(Object.keys(tempObj)[k] == 'productUrl'){
-                    let tempArray = tempObj.productUrl;
-                    tempArray[0].text = 'https://www.metro.ca'+tempArray[0].text
-                    finalGroup[j].productUrl = tempArray;
-                    
-                }
-                if(Object.keys(tempObj)[k] == 'rank'){
-                    let tempArray = tempObj.rank;
-                    tempArray[0].text = +tempArray[0].text 
-                    finalGroup[j].rank = tempArray;
-                }
-                if(Object.keys(tempObj).includes('id')==false){
-                   let tempArray = [{}]
-                   tempArray[0].text = createId('067000', 5)
-                   finalGroup[j].id = tempArray;
-                }
+                    }
+                    if(Object.keys(tempObj)[k] == 'rank'){
+                        let tempArray = tempObj.rank;
+                        tempArray[0].text = +tempArray[0].text 
+                        finalGroup[j].rank = tempArray;
+                    }
+                    if(Object.keys(tempObj).includes('id')==false){
+                        let tempArray = [{}]
+                        tempArray[0].text = createId('067000', 5)
+                        finalGroup[j].id = tempArray;
+                    }
                 
-            }
+                }
            
             
+            }
+            finalData.push({});
+            finalData[i].group = finalGroup;
         }
-
-        finalData.push({});
-        finalData[i].group = finalGroup;
     }
+    console.log(finalData)
+    return finalData;
 }
-console.log(finalData)
+let finalData = changeData(toChangeData)
+
 
 function createId(template, index){
-    
     for(let i = 0; i < index; i++){
         template += Math.round(Math.random() * 10 + 1);
     }
     return template;
 }
-
-
-
-
 
     for(let i = 0; i < finalData.length; i++){
         let tempObj = finalData[i];
