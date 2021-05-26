@@ -1,4 +1,4 @@
- const mainData = [
+const mainData = [
   {
     'group': [
       {

@@ -3,40 +3,68 @@ import toChangeData from './data.js';
 let container = document.getElementById('container')
 
 let finalData = [];
-for(let i = 0; i < toChangeData.length;i++){
+for(let i = 0; i < toChangeData.length; i++){
     let tempObj = toChangeData[i];
-    if (Object.keys(tempObj).length == 1 && Object.keys(tempObj)[0] == 'group') {
-        let group = tempObj.group;
-        finalData.push({'group':[{}]})
-        for(let j = 0; j < group.length; j++){
-            let tempObj = group[i];
+    if(Object.keys(tempObj).length == 1 && Object.keys(tempObj)[0] == 'group'){
+        let tempGroup = tempObj.group;
+        let finalGroup = [];
+        for(let j = 0; j < tempGroup.length; j++){
+            let tempObj = tempGroup[j];
+            finalGroup.push({})
             for(let k = 0; k < Object.keys(tempObj).length; k++){
+                let valueObj = {};
                 if(Object.keys(tempObj)[k] == 'price'){
-                   finalData[i].group['price'] = [];
+                    let tempArray = tempObj.price;
+                    if(tempArray.length == 0){
+                        finalGroup[j].price = tempArray;
+                    }else{
+                        tempArray[0].text = tempArray[0].text.replace(/[a-zа-яё$]/gi, '');
+                        finalGroup[j].price = tempArray;
+                    }
+                    
                 }
                 if(Object.keys(tempObj)[k] == 'productUrl'){
-                    //finalData[i].group[k].p = [''];
-                 }
-                 if(Object.keys(tempObj)[k] == 'rank'){
-                    finalData[i].group['rank'] = [];
-                 }
+                    let tempArray = tempObj.productUrl;
+                    tempArray[0].text = 'https://www.metro.ca'+tempArray[0].text
+                    finalGroup[j].productUrl = tempArray;
+                    
+                }
+                if(Object.keys(tempObj)[k] == 'rank'){
+                    let tempArray = tempObj.rank;
+                    tempArray[0].text = +tempArray[0].text 
+                    finalGroup[j].rank = tempArray;
+                }
+                if(Object.keys(tempObj).includes('id')==false){
+                   let tempArray = [{}]
+                   tempArray[0].text = createId('067000', 5)
+                   finalGroup[j].id = tempArray;
+                }
+                
             }
+           
+            
         }
+
+        finalData.push({});
+        finalData[i].group = finalGroup;
     }
-    
-    console.log('-----------------------------')
 }
 console.log(finalData)
 
+function createId(template, index){
+    
+    for(let i = 0; i < index; i++){
+        template += Math.round(Math.random() * 10 + 1);
+    }
+    return template;
+}
 
 
 
 
 
-
-
-    for(let i = 0; i < arrayData.length; i++){
-        let tempObj = arrayData[i];
+    for(let i = 0; i < finalData.length; i++){
+        let tempObj = finalData[i];
         for(let key in tempObj){
             let title = document.createElement('h3');
             title.innerHTML = `${key} ${i+1} `;
